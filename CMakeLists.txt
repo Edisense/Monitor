@@ -12,7 +12,10 @@ set(CMAKE_AUTOUIC ON)
 # Find the QtWidgets library
 find_package(Qt5Widgets)
 
+add_subdirectory(ext/Comms)
+
 include_directories(src/ui src/controller src/model)
+include_directories(ext/Comms/include)
 
 set(SOURCE_FILES main.cpp
                  src/ui/ui_Edisense.h
@@ -24,9 +27,14 @@ set(SOURCE_FILES main.cpp
                  src/controller/HomeController.cpp
                  src/model/Configuration.h
                  src/model/Node.h
-                 src/model/NodeManager.h)
+                 src/model/NodeManager.h
+                 src/model/PollerDaemon.h
+                 src/model/PollerDaemon.cpp
+                 )
 
 add_executable(EdisenseClient ${SOURCE_FILES})
+target_link_libraries(EdisenseClient zmqpp)
+target_link_libraries(EdisenseClient EdisenseComms)
 
 # Use the Widgets module from Qt 5.
 target_link_libraries(EdisenseClient Qt5::Widgets)
