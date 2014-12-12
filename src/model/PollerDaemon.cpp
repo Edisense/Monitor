@@ -32,10 +32,10 @@ void PollerDaemon::relocate() {
       hostsByDev.insert(std::pair<device_t, std::list<std::string>>(*it, results));
     }
   }
-  for(std::map<device_t, std::list<std::string>>::iterator it = hostsByDev.begin(); it != hostsByDev.end(); ++it) {
-    for(std::list<std::string>::iterator iit = it->second.begin(); iit != it->second.end(); ++iit) {
+  for (std::map<device_t, std::list<std::string>>::iterator it = hostsByDev.begin(); it != hostsByDev.end(); ++it) {
+    for (std::list<std::string>::iterator iit = it->second.begin(); iit != it->second.end(); ++iit) {
       auto search = devsByHost.find(*iit);
-      if(search == devsByHost.end()) {
+      if (search == devsByHost.end()) {
         //not found
         std::list<device_t> tempDevList;
         tempDevList.push_back(it->first);
@@ -43,8 +43,8 @@ void PollerDaemon::relocate() {
       }
       else {
         search->second.push_back(it->first);
-	search->second.sort();
-	search->second.unique(); //remove duplicates
+        search->second.sort();
+        search->second.unique(); //remove duplicates
       }
     }
   }
@@ -85,10 +85,10 @@ void PollerDaemon::run() {
         else {
           //we need to locate the nodes again and rebuild the master list
           relocate_f = true;
-	}
+        }
       }
     }
-    if(relocate_f) {
+    if (relocate_f) {
       relocate();
       relocate_f = false;
     }
