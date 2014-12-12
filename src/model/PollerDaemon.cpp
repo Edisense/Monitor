@@ -26,10 +26,11 @@ void PollerDaemon::relocate() {
 
     std::cout << "Give me all hosts that store device: " << *it << ". Asking: " << knownHost << std::endl;
 
-    assert(std::future_status::ready == status);
-    std::list<std::string> results = hostIDs.get();
-    //Any reason to not always use knownHost?
-    hostsByDev.insert(std::pair<device_t, std::list<std::string>>(*it, results));
+    if (std::future_status::ready == status) {
+      std::list<std::string> results = hostIDs.get();
+      //Any reason to not always use knownHost?
+      hostsByDev.insert(std::pair<device_t, std::list<std::string>>(*it, results));
+    }
   }
   for(std::map<device_t, std::list<std::string>>::iterator it = hostsByDev.begin(); it != hostsByDev.end(); ++it) {
     for(std::list<std::string>::iterator iit = it->second.begin(); iit != it->second.end(); ++iit) {
@@ -71,13 +72,14 @@ void PollerDaemon::run() {
 	std::future_status status = resultData.wait_for(std::chrono::seconds(2));
 	assert(std::future_status::ready == status);
 	std::list<GetResult> results = resultData.get();
-	assert(1 == results.size());
-        //do something with the data
-	if (results.begin()->status == SUCCESS) {
-          std::list<Data> readings = *results.begin()->values;
-          for (std::list<Data>::iterator j = readings.begin(); j != readings.end(); j++) {
-	    long long* temp_data = reinterpret_cast<long long*>(&j->data[0]);
-            std::cout << "host: " << it->first << " | device: " << *iit << " | data: " << *temp_data << std::endl;
+	if(1 == results.size()) {
+          //do something with the data
+          if (results.begin()->status == SUCCESS) {
+            std::list<Data> readings = *results.begin()->values;
+            for (std::list<Data>::iterator j = readings.begin(); j != readings.end(); j++) {
+	      long long* temp_data = reinterpret_cast<long long*>(&j->data[0]);
+              std::cout << "host: " << it->first << " | device: " << *iit << " | data: " << *temp_data << std::endl;
+	    }
 	  }
 	}
         else {
