@@ -19,7 +19,7 @@ void PollerDaemon::relocate() {
   std::cout << "Relocating!!" << std::endl;
   std::map<device_t, std::list<std::string>> hostsByDev;
   devsByHost.clear(); //reset the master list
-  for(std::list<device_t>::iterator it = devices.begin(); it != devices.end(); ++it) {
+  for (std::list<device_t>::iterator it = devices.begin(); it != devices.end(); ++it) {
 
     std::future<std::list<std::string>> hostIDs = client->locate(*it, knownHost);
 
@@ -29,10 +29,10 @@ void PollerDaemon::relocate() {
     //Any reason to not always use knownHost?
     hostsByDev.insert(std::pair<device_t, std::list<std::string>>(*it, results));
   }
-  for(std::map<device_t, std::list<std::string>>::iterator it = hostsByDev.begin(); it != hostsByDev.end(); ++it) {
-    for(std::list<std::string>::iterator iit = it->second.begin(); iit != it->second.end(); ++iit) {
+  for (std::map<device_t, std::list<std::string>>::iterator it = hostsByDev.begin(); it != hostsByDev.end(); ++it) {
+    for (std::list<std::string>::iterator iit = it->second.begin(); iit != it->second.end(); ++iit) {
       auto search = devsByHost.find(*iit);
-      if(search == devsByHost.end()) {
+      if (search == devsByHost.end()) {
         //not found
         std::list<device_t> tempDevList;
         tempDevList.push_back(it->first);
@@ -40,8 +40,8 @@ void PollerDaemon::relocate() {
       }
       else {
         search->second.push_back(it->first);
-	search->second.sort();
-	search->second.unique(); //remove duplicates
+        search->second.sort();
+        search->second.unique(); //remove duplicates
       }
     }
   }
@@ -64,24 +64,24 @@ void PollerDaemon::run() {
       tempHost.push_back(it->first);
       for (std::list<device_t>::iterator iit = it->second.begin(); iit != it->second.end(); iit++) {
         resultData = client->get(++tid, tempHost, *iit, startT, endT);
-	std::future_status status = resultData.wait_for(std::chrono::seconds(2));
-	assert(std::future_status::ready == status);
-	std::list<GetResult> results = resultData.get();
-	assert(1 == results.size());
+        std::future_status status = resultData.wait_for(std::chrono::seconds(2));
+        assert(std::future_status::ready == status);
+        std::list<GetResult> results = resultData.get();
+        assert(1 == results.size());
         //do something with the data
-	if (results.begin()->status == SUCCESS) {
+        if (results.begin()->status == SUCCESS) {
           std::list<Data> readings = *results.begin()->values;
           for (std::list<Data>::iterator j = readings.begin(); j != readings.end(); j++) {
             std::cout << "host: " << it->first << " | device: " << *iit << " | data: " << j->data << std::endl;
-	  }
-	}
+          }
+        }
         else {
           //we need to locate the nodes again and rebuild the master list
           relocate_f = true;
-	}
+        }
       }
     }
-    if(relocate_f) {
+    if (relocate_f) {
       relocate();
       relocate_f = false;
     }
