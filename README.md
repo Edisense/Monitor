@@ -1,4 +1,4 @@
 Monitor
 =======
 
-GUI front end (in QT) for the Edisense cluster
+Command line front end client for the edisense cluster
