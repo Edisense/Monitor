@@ -1,7 +1,5 @@
 #include <iostream>
 #include <chrono>
-#include <QtWidgets/qapplication.h>
-#include <HomeController.h>
 #include "PollerDaemon.h"
 
 using namespace std;
@@ -23,8 +21,5 @@ int main(int argc, char *argv[]) {
       std::this_thread::sleep_for(std::chrono::seconds(1));
     }
 
-  QApplication app(argc, argv);
-  HomeController* appController = new HomeController;
-  appController->start();
-  return app.exec();
+  return 0;
 }
