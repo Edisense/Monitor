@@ -10,7 +10,11 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find the QtWidgets library
-find_package(Qt5Widgets)
+find_package(Qt5Widgets REQUIRED)
+
+include_directories(${Qt5Widgets_INCLUDE_DIRS})
+add_definitions(${Qt5Widgets_DEFINITIONS})
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 add_subdirectory(ext/Comms)
 
@@ -18,13 +22,6 @@ include_directories(src/ui src/controller src/model)
 include_directories(ext/Comms/include)
 
 set(SOURCE_FILES main.cpp
-                 src/ui/ui_Edisense.h
-                 src/ui/HomeView.h
-                 src/ui/HomeView.cpp
-                 src/ui/NodeViewModel.h
-                 src/ui/NodeViewModel.cpp
-                 src/controller/HomeController.h
-                 src/controller/HomeController.cpp
                  src/model/Configuration.h
                  src/model/Node.h
                  src/model/NodeManager.h
