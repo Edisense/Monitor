@@ -1,5 +1,8 @@
 #include <edisense_comms.h>
 #include <edisense_types.h>
+#include <map>
+#include <list>
+#include <string>
 #include "client.h"
 
 typedef struct {
