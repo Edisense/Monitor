@@ -22,13 +22,6 @@ include_directories(src/ui src/controller src/model)
 include_directories(ext/Comms/include)
 
 set(SOURCE_FILES main.cpp
-                 src/ui/ui_Edisense.h
-                 src/ui/HomeView.h
-                 src/ui/HomeView.cpp
-                 src/ui/NodeViewModel.h
-                 src/ui/NodeViewModel.cpp
-                 src/controller/HomeController.h
-                 src/controller/HomeController.cpp
                  src/model/Configuration.h
                  src/model/Node.h
                  src/model/NodeManager.h
